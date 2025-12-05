@@ -5,7 +5,9 @@ import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -20,6 +22,8 @@ import java.awt.GridLayout;
  * @author Paula Alejandra Díaz Arredondo (PAD)
  */
 public class BdcGUI extends JFrame{
+	private JFrame gameModeMenu;	//used to apply the singleton pattern, when creating a new game choosing the game mode
+	
 	private JPanel rightSection;	//used as button section
 	private JPanel leftSection;		//used as design section
 	private JButton newGameButton;	//used for creating a new game
@@ -48,6 +52,25 @@ public class BdcGUI extends JFrame{
 	 * Sets all swing instances used for the design of the main GUI
 	 */
 	private void prepareElements(){
+		//variables
+		ImageIcon icon = new ImageIcon("sources/gameIcon.png");
+		//limits for the buttoner
+		JPanel north = new JPanel();
+		north.setPreferredSize(new Dimension(500, 25));
+		north.setOpaque(false);
+		JPanel south = new JPanel();
+		south.setPreferredSize(new Dimension(500, 25));
+		south.setOpaque(false);
+		JPanel east = new JPanel();
+		east.setPreferredSize(new Dimension(25, 100));
+		east.setOpaque(false);
+		JPanel west = new JPanel();
+		west.setPreferredSize(new Dimension(25, 100));
+		west.setOpaque(false);
+		JPanel form = new JPanel();
+		form.setLayout(new GridLayout(3, 1, 0, 20));
+		form.setOpaque(false);
+		
 		//preparation for the left panel	
 		//utilizamos una clase anonima para poder asignarle la imagen del juego. Sobre-escribiendo paintComponent
 		leftSection = new JPanel(){
@@ -74,24 +97,30 @@ public class BdcGUI extends JFrame{
 				g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
 			}
 		};
+		
 		//estructura de la botonera
-		rightSection.setLayout(new GridLayout(3, 1, 0, 22));
-		rightSection.add(newGameButton);
-		rightSection.add(loadGameButton);
-		rightSection.add(exitGameButton);
+		rightSection.setLayout(new BorderLayout());
+		rightSection.setPreferredSize(new Dimension(400, 600));
+		form.add(newGameButton);
+		form.add(loadGameButton);
+		form.add(exitGameButton);
+		rightSection.add(form, BorderLayout.CENTER);
+		rightSection.add(north, BorderLayout.NORTH);
+		rightSection.add(south, BorderLayout.SOUTH);
+		rightSection.add(east, BorderLayout.EAST);
+		rightSection.add(west, BorderLayout.WEST);
 		
 		
 		//main configuration of the JFrame
 		this.setTitle("Bad Dopo Cream");
 		this.setResizable(false);
-		this.setSize(1000, 800);
 		this.setLayout(new GridLayout(1, 2));
-		ImageIcon icon = new ImageIcon("sources/gameIcon.png");
 		this.setIconImage(icon.getImage());
-		
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		//adding elements
 		this.add(leftSection);
 		this.add(rightSection);
+		this.pack();
 		this.setVisible(true);
 	}
 	
@@ -100,9 +129,9 @@ public class BdcGUI extends JFrame{
 	 */
 	private void prepareButtons(){
 		//sets the images used
-		Image backgroundVanilla = new ImageIcon("sources/vainilla.png").getImage();
-		Image backgroundChocolet = new ImageIcon("sources/chocolate.png").getImage();
-		Image backgroundStrawberry = new ImageIcon("sources/fresa.png").getImage();
+		Image backgroundVanilla = new ImageIcon("sources/newGameButton.png").getImage();
+		Image backgroundChocolet = new ImageIcon("sources/loadGameButton.png").getImage();
+		Image backgroundStrawberry = new ImageIcon("sources/exitGameButton.png").getImage();
 		
 		//new game button
 		newGameButton = new JButton() {
@@ -177,7 +206,10 @@ public class BdcGUI extends JFrame{
 		newGameButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO 
+				if(gameModeMenu == null) gameModeMenu = new GameModeGUI(BdcGUI.this);
+				
+				gameModeMenu.setVisible(true);
+				BdcGUI.this.setVisible(false);
 			}
 		});
 		
