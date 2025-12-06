@@ -22,7 +22,6 @@ import java.awt.GridLayout;
  * @author Paula Alejandra Díaz Arredondo (PAD)
  */
 public class BdcGUI extends JFrame{
-	private JFrame gameModeMenu;	//used to apply the singleton pattern, when creating a new game choosing the game mode
 	
 	private JPanel rightSection;	//used as button section
 	private JPanel leftSection;		//used as design section
@@ -139,7 +138,6 @@ public class BdcGUI extends JFrame{
 			protected void paintComponent(Graphics g){				
 				//set the background image
 				g.drawImage(backgroundVanilla, 0, 0, getWidth(), getHeight(), this);
-		        
 		        super.paintComponent(g);
 		        
 			}
@@ -206,7 +204,7 @@ public class BdcGUI extends JFrame{
 		newGameButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(gameModeMenu == null) gameModeMenu = new GameModeGUI(BdcGUI.this);
+				GameModeGUI gameModeMenu = new GameModeGUI(BdcGUI.this);
 				
 				gameModeMenu.setVisible(true);
 				BdcGUI.this.setVisible(false);

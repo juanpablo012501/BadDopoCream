@@ -15,6 +15,9 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  * When creating a new game you have to choose a game mode (single player, two players, player vs machine or machine vs machine.
  * This class is a menu to choose the game mode
@@ -23,7 +26,7 @@ import java.awt.event.ActionListener;
  */
 public class GameModeGUI extends JFrame{
 	private JFrame lastWindow;		//used to go back to the last window
-	private SettingsGUI modeChosen;	//used to apply the singleton pattern
+	private ArrayList<ChooserPanel> panels = new ArrayList<ChooserPanel>();
 	
 	private JPanel superiorPanel;
 	private JPanel inferiorPanel;
@@ -32,6 +35,15 @@ public class GameModeGUI extends JFrame{
 	private JButton playerMachineButton;
 	private JButton machineMachineButton;
 	private JButton backButton;
+	
+	//arrays for the images
+	private static String[] IPATHS = {"sources/vanilla.png", "sources/chocolate.png", "sources/strawberry.png"};
+	private static ArrayList<String> ICECREAMPATHS = new ArrayList<String>(Arrays.asList(IPATHS));
+	private static String[] MPATHS = {"sources/fearful.png", "sources/expert.png", "sources/hungry.png"};
+	private static ArrayList<String> MACHINEPATHS = new ArrayList<String>(Arrays.asList(MPATHS));
+	private static String[] LPATHS = {"sources/level1.png", "sources/level2.png", "sources/level3.png"};
+	private static ArrayList<String> LEVELPATHS = new ArrayList<String>(Arrays.asList(LPATHS));
+	private ChooserPanel levelsPanel = new ChooserPanel(LEVELPATHS, "sources/levelsBackground.png", 'l');
 	
 	/**
 	 * Constructor of this menu (GUI)
@@ -92,7 +104,7 @@ public class GameModeGUI extends JFrame{
 		
 		//setting for the inferior panel
 		inferiorPanel = new JPanel() {
-			private Image image = new ImageIcon("sources/buttoner2Background.png").getImage();
+			private Image image = new ImageIcon("sources/startBackground.png").getImage();
 			
 			@Override
 			protected void paintComponent(Graphics g) {				
@@ -132,7 +144,7 @@ public class GameModeGUI extends JFrame{
 	private void prepareButtons() {
 		//back
 		backButton = new JButton() {
-			private Image backImage = new ImageIcon("sources/back.png").getImage();
+			private Image backImage = new ImageIcon("sources/backImage.png").getImage();
 			
 			@Override
 			protected void paintComponent(Graphics g) {
@@ -207,17 +219,69 @@ public class GameModeGUI extends JFrame{
 		singlePlayerButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				modeChosen = new SinglePlayerSettingsGUI(GameModeGUI.this);
+				ChooserPanel playerPanel = new ChooserPanel(ICECREAMPATHS, "sources/playerBackground.png", 'i');
+				panels.add(playerPanel);
+				panels.add(levelsPanel);
 				
+				SettingsGUI newWindow = new SettingsGUI(GameModeGUI.this, panels);
+				newWindow.setVisible(true);
 				GameModeGUI.this.setVisible(false);
-				modeChosen.setVisible(true);
 			}
 		});
 		
 		//listener for twoPlayerButton
+		twoPlayersButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ChooserPanel playerOnePanel = new ChooserPanel(ICECREAMPATHS, "sources/playerBackground.png", 'i');
+				ChooserPanel playerTwoPanel = new ChooserPanel(ICECREAMPATHS, "sources/playerBackground.png", 'i');
+				panels.add(playerOnePanel);
+				panels.add(playerTwoPanel);
+				panels.add(levelsPanel);
+				
+				SettingsGUI newWindow = new SettingsGUI(GameModeGUI.this, panels);
+				newWindow.setVisible(true);
+				GameModeGUI.this.setVisible(false);
+			}
+		});
 		
 		//listener for playerMachineButton
+		playerMachineButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ChooserPanel playerPanel = new ChooserPanel(ICECREAMPATHS, "sources/playerBackground.png", 'i');
+				ChooserPanel machinePanel = new ChooserPanel(MACHINEPATHS, "sources/machineBackground.png", 'm');
+				panels.add(playerPanel);
+				panels.add(machinePanel);
+				panels.add(levelsPanel);
+				
+				SettingsGUI newWindow = new SettingsGUI(GameModeGUI.this, panels);
+				newWindow.setVisible(true);
+				GameModeGUI.this.setVisible(false);
+			}
+		});
 		
 		//listener for machineMachineButton
+		machineMachineButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ChooserPanel machineOnePanel = new ChooserPanel(MACHINEPATHS, "sources/machineBackground.png", 'm');
+				ChooserPanel machineTwoPanel = new ChooserPanel(MACHINEPATHS, "sources/machineBackground.png", 'm');
+				panels.add(machineOnePanel);
+				panels.add(machineTwoPanel);
+				panels.add(levelsPanel);
+				
+				SettingsGUI newWindow = new SettingsGUI(GameModeGUI.this, panels);
+				newWindow.setVisible(true);
+				GameModeGUI.this.setVisible(false);
+			}
+		});
+	}
+	
+	/**
+	 * Removes all panels added before
+	 */
+	public void removePanels() {
+		panels.clear();
 	}
 }
